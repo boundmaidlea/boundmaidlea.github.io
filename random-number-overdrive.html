@@ -70,7 +70,7 @@
                 const cells = Array.from(document.querySelectorAll('pre'))
                 
                 const getRandomCell = () => { // one of the 168 cells
-                    return cells[Math.floor(Math.random() * 168)];
+                    return cells[Math.floor(Math.random() * cells.length)];
                 }
                 cells.forEach(cell => { // start setup
                     cell.textContent = getNum();
