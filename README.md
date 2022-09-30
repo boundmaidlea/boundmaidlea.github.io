@@ -1,4 +1,4 @@
-# boundmaidlea's GitHub Pages
+# boundmaidlea.github.io
 
 ## Little Web-Applets:
 
