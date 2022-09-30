@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="darkreader-lock"> <!--disable dark reader addon for this page (does not properly work)-->
+        <style>
+            body, html {
+                background-color: #2c2c2c;
+                color: #a8a8a8;
+                margin: 0;
+                overflow: clip;
+                height: 100%;
+                user-select: none;
+            }
+            main {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                margin: 0 auto;
+            }
+            main > div {
+                display: flex;
+                flex-direction: row;
+                flex-grow: 1;
+            }
+            div > div {
+                flex-grow: 1;
+            }
+            pre {
+                flex-grow: 0.25;
+                margin: 0 8px;
+                font-size: 30pt;
+                font-family: 'Consolas', monospace;
+            }
+            
+            /*Fade animations:*/            
+            .cooldown { /*animation in first 2 secs of cooldown*/
+                animation: fade-out-and-in 2s;
+                animation-iteration-count: 1;
+            }
+            @keyframes fade-out-and-in {
+                0% { color: #a8a8a8 }
+                50% { color: transparent }
+                100% { color: #a8a8a8 }
+            }
+        </style>
+        <script>
+            function getNum () { // generate a random 4-digit number
+                return String(Math.floor(Math.random() * 10000)).padStart(4, "0");
+            }
+            
+            // 14 rows, 12 columns
+            let rows = 14, cols = 12;
+            const wrapper = document.createElement('main');
+            while (rows) {
+                wrapper.append(document.createElement('div'));
+                rows--
+            }
+            Array.from(wrapper.children).forEach(row => {
+                row.append(document.createElement('div'));
+                while (cols) {
+                    row.append(document.createElement('pre'));
+                    cols--
+                }
+                cols = 12; // reset counter for next row
+                row.append(document.createElement('div'));
+            })
+            
+            window.onload = () => { // wait for page to load to access DOM
+                document.body.append(wrapper);
+                const cells = Array.from(document.querySelectorAll('pre'))
+                
+                const getRandomCell = () => { // one of the 168 cells
+                    return cells[Math.floor(Math.random() * 168)];
+                }
+                cells.forEach(cell => { // start setup
+                    cell.textContent = getNum();
+                })
+                setInterval(() => { // randomly replace cells
+                    [ // always try 6 cells at a time
+                        getRandomCell(),
+                        getRandomCell(),
+                        getRandomCell(),
+                        getRandomCell(),
+                        getRandomCell(),
+                        getRandomCell()
+                    ].forEach(cell => {
+                        if (!cell.classList.contains('cooldown')) { // check if cell is on cooldown
+                            cell.classList.add('cooldown'); // flag cell on cooldown
+                            setTimeout(() => { // replace number
+                                cell.textContent = getNum();
+                            }, 1000); // 1 sec for fade-out animation
+                            setTimeout(() => { // cooldown timer
+                                cell.classList.remove('cooldown');
+                            }, 5000); // 5 sec cooldown
+                        }
+                    });
+                }, 200); //try every 0.2 secs
+            }
+        </script>
+    </head>
+</html>
